@@ -35,6 +35,7 @@
           <a id="botao-eventos" href="Eventos.html"><button>Eventos</button></a>
         </div>
       </div>
+      <hr class="primary my-3" style="height: 2px; background: #0d6efd" />
     </header>
 
     <!-- <div id="principal">
@@ -59,7 +60,7 @@
       </div>
     </div> -->
 
-    <div class="container">
+    <div class="container conteudo">
       <div class="row">
         <div class="col-md-3">
           <h4 class="mt-4" style="font-size: 20px">Usuários</h4>
@@ -105,7 +106,6 @@
       import { initLoginApp } from "./initialLoad.js";
       initLoginApp();
       var usuarioLogado = sessionStorage.getItem("usuarioCorrente");
-
 
       // Exibe botoes de navegacao conforme se o usuário está logado ou não
       if (usuarioLogado) {
