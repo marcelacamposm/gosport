@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <link rel="stylesheet" href="style.css" />
+    <script
+      src="https://kit.fontawesome.com/3beec94b40.js"
+      crossorigin="anonymous"
+    ></script>
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+      integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+      crossorigin="anonymous"
+    />
+
+    <title>Go Sport</title>
+  </head>
+  <body>
+    <header>
+      <div class="inicio">
+        <div class="logo">
+          <img src="logo.png" alt="" />
+        </div>
+        <div class="menu">
+          <a id="botao-login" href="login.html"><button>Login</button></a>
+          <a id="botao-logout" onclick="logout()" href="#"
+            ><button>Logout</button></a
+          >
+          <a id="botao-cadastros" href="Cadastro.html"
+            ><button>Cadastro</button></a
+          >
+          <a id="botao-eventos" href="Eventos.html"><button>Eventos</button></a>
+        </div>
+      </div>
+    </header>
+
+    <!-- <div id="principal">
+      <div class="foto">
+        <figure><img id="lucio" src="futebol.jpg" alt="foto pizza" /></figure>
+      </div>
+      <div class="texto">
+        <h1>Fute<span>bol</span></h1>
+        <br />
+        <p>
+          O futebol é um esporte apaixonante e globalmente popular. Com suas
+          raízes históricas remontando a séculos atrás, o futebol evoluiu para
+          se tornar um espetáculo emocionante, capaz de unir pessoas de
+          diferentes culturas e origens. Das partidas acirradas em campos de
+          grama verde aos jogadores habilidosos que encantam os espectadores com
+          suas jogadas criativas, o futebol cativa milhões de fãs ao redor do
+          mundo.
+        </p>
+        <div class="adquirir">
+          <button>Ver mais Sobre</button>
+        </div>
+      </div>
+    </div> -->
+
+    <div class="container">
+      <div class="row">
+        <div class="col-md-3">
+          <h4 class="mt-4" style="font-size: 20px">Usuários</h4>
+          <ul id="sidebar-list" class="list-group"></ul>
+        </div>
+
+        <div class="col-md-9">
+          <div class="container mt-4">
+            <div class="form-group">
+              <h4 class="mt-4" style="font-size: 20px">Eventos</h4>
+
+              <input
+                type="text"
+                class="form-control"
+                id="search"
+                placeholder="Busque por ID ou Esporte"
+              />
+            </div>
+            <div id="lista-eventos"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <footer>
+      <div class="ultimo">
+        <i class="fab fa-facebook-f"></i>
+        <i class="fab fa-instagram"></i>
+        <i class="fab fa-twitter"></i>
+      </div>
+    </footer>
+
+    <script type="module" src="eventos.js"></script>
+
+    <script>
+      function logout() {
+        sessionStorage.removeItem("usuarioCorrente");
+        window.location.reload();
+      }
+    </script>
+
+    <script type="module">
+      import { initLoginApp } from "./initialLoad.js";
+      initLoginApp();
+      var usuarioLogado = sessionStorage.getItem("usuarioCorrente");
+
+
+      // Exibe botoes de navegacao conforme se o usuário está logado ou não
+      if (usuarioLogado) {
+        document.getElementById("botao-login").style.display = "none";
+      } else {
+        document.getElementById("botao-eventos").style.display = "none";
+        document.getElementById("botao-cadastros").style.display = "none";
+        document.getElementById("botao-logout").style.display = "none";
+      }
+
+      var inputSearch = document.getElementById("search");
+
+      // Filtra o array com base no termo de busca
+      function getEventosFiltrados() {
+        var termoBusca = inputSearch.value.toLowerCase();
+        var eventos = JSON.parse(localStorage.getItem("dbEvento")) || [];
+
+        return eventos.filter(function (item) {
+          return (
+            item.esporte.toLowerCase().includes(termoBusca) ||
+            String(item.id).includes(termoBusca)
+          );
+        });
+      }
+
+      function renderizaListaDeUsuarios() {
+        var usuarios = JSON.parse(localStorage.getItem("db_usuarios")) || [];
+
+        const listaSidebar = document.getElementById("sidebar-list");
+        listaSidebar.innerHTML = "";
+
+        usuarios.forEach((item) => {
+          const listItem = document.createElement("li");
+          listItem.classList.add("list-group-item");
+          listItem.textContent = item.nome;
+          listaSidebar.appendChild(listItem);
+        });
+      }
+
+      function renderizaListaDeEventos() {
+        const eventosFiltrados = getEventosFiltrados();
+        var listaEventos = document.getElementById("lista-eventos");
+        listaEventos.innerHTML = "";
+
+        eventosFiltrados.forEach(function (item, index) {
+          // Cria uma div para cada evento
+          var div = document.createElement("div");
+          div.classList.add("card", "mb-3");
+
+          // Cria um cabeçalho para o título
+          var cabecalho = document.createElement("div");
+          cabecalho.classList.add(
+            "card-header",
+            "bg-primary",
+            "text-white",
+            "font-weight-bold"
+          );
+          cabecalho.textContent = "Evento de " + item.esporte + " #" + item.id;
+          div.appendChild(cabecalho);
+
+          // Cria outra div para colocar mais info sobre o evento
+          var corpo = document.createElement("div");
+          corpo.classList.add("card-body");
+
+          let linha = document.createElement("p");
+          linha.classList.add("mb-1");
+          linha.innerHTML =
+            '<span class="label font-weight-bold">Esporte: </span>' +
+            item.esporte;
+          corpo.appendChild(linha);
+
+          linha = document.createElement("p");
+          linha.classList.add("mb-1");
+          linha.innerHTML =
+            '<span class="label font-weight-bold">Quantidade Máxima: </span>' +
+            item.quantidadeMax;
+          corpo.appendChild(linha);
+
+          linha = document.createElement("p");
+          linha.classList.add("mb-1");
+          linha.innerHTML =
+            '<span class="label font-weight-bold">Quantidade Mínima: </span>' +
+            item.quantidadeMin;
+          corpo.appendChild(linha);
+
+          linha = document.createElement("p");
+          linha.classList.add("mb-1");
+          linha.innerHTML =
+            '<span class="label font-weight-bold">Preço: </span> R$ ' +
+            item.preco;
+          corpo.appendChild(linha);
+
+          linha = document.createElement("p");
+          linha.classList.add("mb-1");
+          linha.innerHTML =
+            '<span class="label font-weight-bold">Local: </span>' + item.local;
+          corpo.appendChild(linha);
+
+          linha = document.createElement("p");
+          linha.classList.add("mb-1");
+          linha.innerHTML =
+            '<span class="label font-weight-bold">Sexo: </span>' + item.sexo;
+          corpo.appendChild(linha);
+
+          div.appendChild(corpo);
+          listaEventos.appendChild(div);
+        });
+      }
+
+      // Ouve o evento de alteração no input de busca
+      inputSearch.addEventListener("input", function () {
+        renderizaListaDeEventos();
+      });
+
+      renderizaListaDeUsuarios();
+      renderizaListaDeEventos();
+    </script>
+  </body>
+</html>

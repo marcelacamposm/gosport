@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Cadastro de Evento</title>
+    <link rel="stylesheet" href="eventos.css" />
+  </head>
+
+  <body>
+    <header>
+      <a
+        href="index.html"
+        style="display: flex; margin-top: 10px; justify-content: center"
+      >
+        <img class="logo" src="logo.png" alt="" style="width: 200px" />
+      </a>
+    </header>
+
+    <div class="container">
+      <h2>Novo Evento</h2>
+      <div class="row">
+        <div id="msg" class="col-sm-10 offset-sm-1"></div>
+      </div>
+
+      <form id="form-contato">
+        <div class="form-group row">
+          <div class="col-sm-4">
+            <label for="inputId">Id</label>
+            <input
+              type="text"
+              class="form-control"
+              id="inputId"
+              placeholder="ID"
+              disabled
+            />
+          </div>
+          <div class="col-sm-8">
+            <label class="labell" for="inputEsporte">Esporte</label>
+            <input
+              type="text"
+              class="form-control"
+              id="inputEsporte"
+              required
+              placeholder="Informe o Esporte"
+            />
+          </div>
+        </div>
+        <div class="form-group row">
+          <div class="col-sm-5">
+            <label class="labell" for="inputQuantidadeMax"
+              >Quantidade Maxima</label
+            >
+            <input
+              type="number"
+              class="form-control"
+              id="inputquantidadeMax"
+              required
+              placeholder="Quantidade Maxima"
+            />
+          </div>
+          <div class="col-sm-7">
+            <label class="labell" for="inputQuantidadeMin"
+              >Quantidade Minima</label
+            >
+            <input
+              type="number"
+              class="form-control"
+              id="inputquantidadeMin"
+              required
+              placeholder="Quantidade Minima"
+            />
+          </div>
+        </div>
+        <div class="form-group row">
+          <div class="col-sm-6">
+            <label class="labell" class="labell" for="inputpreco">Preço</label>
+            <input
+              type="text"
+              class="form-control"
+              id="inputpreco"
+              placeholder="Preço"
+            />
+          </div>
+          <div class="col-sm-6">
+            <label class="labell" for="inputlocal">Local</label>
+            <input
+              type="text"
+              class="form-control"
+              id="inputlocal"
+              required
+              placeholder="Informe o Local"
+            />
+          </div>
+        </div>
+        <div class="form-group row">
+          <div class="col-sm-12">
+            <label class="labell" for="inputSexo">Sexo</label>
+            <select class="btnsexo" id="inputSexo" required>
+              <option value="">Selecione o sexo</option>
+              <option value="masculino">Masculino</option>
+              <option value="feminino">Feminino</option>
+              <option value="outro">Outro</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group row"></div>
+        <div class="form-group row">
+          <div class="col-sm-12">
+            <input
+              type="button"
+              class="btn btn-success"
+              id="btnInsert"
+              value="Insert"
+            />
+            <input
+              type="button"
+              class="btn btn-warning"
+              id="btnUpdate"
+              value="Update"
+            />
+            <input
+              type="button"
+              class="btn btn-danger"
+              id="btnDelete"
+              value="Delete"
+            />
+            <input
+              type="button"
+              class="btn btn-secondary"
+              id="btnClear"
+              value="Clear"
+            />
+          </div>
+        </div>
+      </form>
+
+      <div class="row">
+        <div class="col-sm-12">
+          <table id="grid-contatos" class="table table-striped">
+            <thead>
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Esporte</th>
+                <th scope="col">Quant. Max</th>
+                <th scope="col">Quant. Min</th>
+                <th scope="col">Preço</th>
+                <th scope="col">Local</th>
+                <th scope="col">Sexo</th>
+              </tr>
+            </thead>
+            <tbody id="table-contatos">
+              <tr>
+                <td scope="row">1</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+    <script type="module">
+      import {
+        getEventos,
+        setEventos,
+        insertEvento,
+        displayMessage,
+        updateEvento,
+        deleteEvento,
+      } from "./eventos.js";
+
+      function exibeContatos() {
+        const eventos = getEventos();
+        // Remove todas as linhas do corpo da tabela
+        $("#table-contatos").html("");
+
+        // Popula a tabela com os registros do banco de dados
+        for (let i = 0; i < eventos.length; i++) {
+          let evento = eventos[i];
+          $("#table-contatos").append(`<tr><td scope="row">${evento.id}</td>
+                                                <td>${evento.esporte}</td>
+                                                <td>${evento.quantidadeMax}</td>
+                                                <td>${evento.quantidadeMin}</td>
+                                                <td>${evento.preco}</td>
+                                                <td>${evento.local}</td>
+                                                <td>${evento.sexo}</td>
+                                            </tr>`);
+        }
+      }
+
+      function init() {
+        // Adiciona funções para tratar os eventos
+        $("#btnInsert").click(function () {
+          // Verfica se o formulário está preenchido corretamente
+          if (!$("#form-contato")[0].checkValidity()) {
+            displayMessage("Preencha o formulário corretamente.");
+            return;
+          }
+
+          // Obtem os valores dos campos do formulário
+          let campoesporte = $("#inputEsporte").val();
+          let campoquantidadeMax = $("#inputquantidadeMax").val();
+          let campoquantidadeMin = $("#inputquantidadeMin").val();
+          let campopreco = $("#inputpreco").val();
+          let campolocal = $("#inputlocal").val();
+          let camposexo = $("#inputSexo").val();
+          let evento = {
+            esporte: campoesporte,
+            quantidadeMax: campoquantidadeMax,
+            quantidadeMin: campoquantidadeMin,
+            preco: campopreco,
+            local: campolocal,
+            sexo: camposexo,
+          };
+
+          insertEvento(evento);
+
+          // Reexibe os contatos
+          exibeContatos();
+
+          // Limpa o formulario
+          $("#form-contato")[0].reset();
+        });
+
+        $("#btnUpdate").click(function () {
+          // Obtem os valores dos campos do formulário
+          let campoId = $("#inputId").val();
+          if (campoId == "") {
+            displayMessage("Selecione um evento para ser alterado.");
+            return;
+          }
+          let campoEsporte = $("#inputEsporte").val();
+          let campoquantidadeMax = $("#inputquantidadeMax").val();
+          let campoquantidadeMin = $("#inputquantidadeMin").val();
+          let campoPreco = $("#inputpreco").val();
+          let campoLocal = $("#inputlocal").val();
+          let campoSexo = $("#inputSexo").val();
+          let evento = {
+            esporte: campoEsporte,
+            quantidadeMax: campoquantidadeMax,
+            quantidadeMin: campoquantidadeMin,
+            preco: campoPreco,
+            local: campoLocal,
+            sexo: campoSexo,
+          };
+
+          updateEvento(parseInt(campoId), evento);
+
+          // Reexibe os contatos
+          exibeContatos();
+
+          // Limpa o formulario
+          $("#form-contato")[0].reset();
+        });
+
+        // Intercepta o click do botão Excluir
+        $("#btnDelete").click(function () {
+          let campoId = $("#inputId").val();
+          if (campoId == "") {
+            displayMessage("Selecione um contato a ser excluído.");
+            return;
+          }
+          deleteEvento(parseInt(campoId));
+
+          // Reexibe os contatos
+          exibeContatos();
+
+          // Limpa o formulario
+          $("#form-contato")[0].reset();
+        });
+
+        // Intercepta o click do botão Listar Contatos
+        $("#btnClear").click(function () {
+          $("#form-contato")[0].reset();
+        });
+
+        // Oculta a mensagem de aviso após alguns segundos
+        $("#msg").bind("DOMSubtreeModified", function () {
+          window.setTimeout(function () {
+            $(".alert")
+              .fadeTo(500, 0)
+              .slideUp(500, function () {
+                $(this).remove();
+              });
+          }, 5000);
+        });
+
+        // Preenche o formulário quando o usuario clicar em uma linha da tabela
+        $("#grid-contatos").on("click", "tr", function (e) {
+          let linhaContato = this;
+          let colunas = linhaContato.querySelectorAll("td");
+
+          $("#inputId").val(colunas[0].innerText);
+          $("#inputEsporte").val(colunas[1].innerText);
+          $("#inputquantidadeMax").val(colunas[2].innerText);
+          $("#inputquantidadeMin").val(colunas[3].innerText);
+          $("#inputpreco").val(colunas[4].innerText);
+          $("#inputlocal").val(colunas[5].innerText);
+          $("#inputSexo").val(colunas[6].innerText);
+        });
+
+        exibeContatos();
+      }
+
+      init();
+    </script>
+  </body>
+</html>

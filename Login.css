@@ -1,0 +1,25 @@
+.menu {
+  padding-top: 10px;
+  width: 50%;
+  text-align: right;
+}
+.menu a {
+  color: rgb(255, 255, 255);
+  text-decoration: none;
+  font-weight: bold;
+  margin-right: -95%;
+  font-size: 16px;
+}
+.menu button {
+  border: solid 1px #49add4;
+  border-radius: 9px;
+  padding: 10px 20px;
+  background: #1391a1ec;
+  cursor: pointer;
+  color: #ffffff;
+  width: 190px;
+}
+
+.menu button:hover {
+  color: #000000;
+}

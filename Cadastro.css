@@ -1,0 +1,75 @@
+label {
+  font-weight: bold;
+}
+
+::placeholder {
+  color: rgb(219, 12, 12) !important;
+  opacity: 0.3;
+}
+
+::-webkit-input-placeholder {
+  /* WebKit, Blink, Edge */
+  color: rgb(219, 12, 12) !important;
+}
+
+:-moz-placeholder {
+  /* Mozilla Firefox 4 to 18 */
+  color: rgb(219, 12, 12) !important;
+  opacity: 0.3;
+}
+
+h1 {
+  text-align: center;
+}
+
+#msg {
+  height: 60px;
+}
+
+#grid-contatos tbody {
+  cursor: pointer;
+}
+
+#inputConfirmarSenha {
+  display: block;
+}
+
+.emailpad {
+  padding-left: 0;
+}
+
+.logo {
+  width: 200px;
+  height: 100px;
+}
+
+header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+#titulo {
+  margin-left: 20px;
+}
+
+.container {
+  margin-top: 20px;
+}
+
+.btn-group {
+  margin-top: 20px;
+}
+
+.btn-group .btn {
+  margin-right: 10px;
+}
+
+.alert {
+  margin-top: 20px;
+}
+
+#grid-contatos {
+  margin-top: 20px;
+}
